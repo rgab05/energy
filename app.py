@@ -26,11 +26,11 @@ load_css()
 # --------------------
 # DARK / LIGHT MODE TOGGLE
 # --------------------
+# Dark/light mode toggle
 theme_mode = st.sidebar.radio("🌗 Theme Mode", ["Dark", "Light"])
-is_dark = theme_mode == "Dark"
+body_class = "dark-mode" if theme_mode == "Dark" else "light-mode"
 
-# Apply body class for CSS
-body_class = "dark-mode" if is_dark else "light-mode"
+# Wrap entire app in a div with the class
 st.markdown(f'<div class="{body_class}">', unsafe_allow_html=True)
 
 # --------------------
@@ -235,3 +235,4 @@ elif page == "ℹ️ About":
 # CLOSE THEME WRAPPER
 # --------------------
 st.markdown("</div>", unsafe_allow_html=True)
+
