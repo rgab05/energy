@@ -6,7 +6,7 @@ import plotly.express as px
 # PAGE CONFIG
 # --------------------
 st.set_page_config(
-    page_title="Clean Streamlit Dashboard",
+    page_title="Streamlit Dashboard",
     page_icon="📊",
     layout="wide"
 )
@@ -24,22 +24,20 @@ def load_css(file_path="assets/styles.css"):
 load_css()
 
 # --------------------
-# DARK / LIGHT MODE TOGGLE
+# THEME TOGGLE
 # --------------------
-# Dark/light mode toggle
 theme_mode = st.sidebar.radio("🌗 Theme Mode", ["Dark", "Light"])
 body_class = "dark-mode" if theme_mode == "Dark" else "light-mode"
 
-# Wrap entire app in a div with the class
+# Wrap all content in a div for dynamic theme
 st.markdown(f'<div class="{body_class}">', unsafe_allow_html=True)
 
 # --------------------
-# LOAD PUBLIC DATA (GAPMINDER)
+# LOAD DATA
 # --------------------
 @st.cache_data
 def load_data():
-    df = px.data.gapminder()
-    return df
+    return px.data.gapminder()
 
 df = load_data()
 
@@ -50,7 +48,7 @@ st.sidebar.title("🚀 Navigation")
 page = st.sidebar.radio("Go to", ["🏠 Home", "📈 Analytics", "ℹ️ About"])
 
 # --------------------
-# COUNTRY DRILL-DOWN SELECTION
+# COUNTRY DRILL-DOWN
 # --------------------
 selected_country = None
 if page in ["🏠 Home", "📈 Analytics"]:
@@ -101,7 +99,6 @@ if page == "🏠 Home":
                 color="lifeExp",
                 hover_name="country",
                 size="pop",
-                animation_frame="year",
                 projection="natural earth",
                 title=f"Life Expectancy — {selected_country}",
                 template="plotly_white",
@@ -121,7 +118,6 @@ if page == "🏠 Home":
                 template="plotly_white",
                 size_max=40
             )
-
         st.plotly_chart(map_fig, use_container_width=True)
 
     with right:
@@ -221,12 +217,6 @@ elif page == "ℹ️ About":
     ✅ External CSS styling  
     ✅ Google Fonts  
     ✅ Streamlit Cloud ready  
-
-    **Built with:**
-    - Python
-    - Streamlit
-    - Plotly
-    - Pandas
     """)
 
     st.success("You're now running a fully production-ready Streamlit UI 🚀")
@@ -235,4 +225,3 @@ elif page == "ℹ️ About":
 # CLOSE THEME WRAPPER
 # --------------------
 st.markdown("</div>", unsafe_allow_html=True)
-
