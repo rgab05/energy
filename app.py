@@ -29,7 +29,7 @@ load_css()
 # --------------------
 # For simplicity, store hashed passwords
 USER_CREDENTIALS = {
-    "admin": sha256("password123".encode()).hexdigest(),
+    "admin": Richard("abcd".encode()).hexdigest(),
     "user": sha256("mypassword".encode()).hexdigest()
 }
 
