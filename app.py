@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import os
-from hashlib import sha256
 
 # --------------------
 # PAGE CONFIG
@@ -25,42 +23,6 @@ def load_css(file_path="assets/styles.css"):
 
 load_css()
 
-# --------------------
-# USER CREDENTIALS (ENVIRONMENT VARIABLES)
-# --------------------
-# Set these environment variables in your deployment platform or locally
-# Example: export ADMIN_PASSWORD_HASH=$(echo -n "password123" | sha256sum | awk '{print $1}')
-USER_CREDENTIALS = {
-    "admin": os.getenv("ADMIN_PASSWORD_HASH"),
-    "user": os.getenv("USER_PASSWORD_HASH")
-}
-
-# --------------------
-# LOGIN LOGIC
-# --------------------
-if "authenticated" not in st.session_state:
-    st.session_state.authenticated = False
-
-def login(username, password):
-    if username in USER_CREDENTIALS and USER_CREDENTIALS[username]:
-        if sha256(password.encode()).hexdigest() == USER_CREDENTIALS[username]:
-            st.session_state.authenticated = True
-            st.success(f"Logged in as {username}")
-            return True
-    st.error("Invalid username or password")
-    return False
-
-# --------------------
-# LOGIN PAGE
-# --------------------
-if not st.session_state.authenticated:
-    st.title("🔒 Login")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    if st.button("Login"):
-        login(username, password)
-    st.stop()  # Stop the rest of the app until login
-     
 # --------------------
 # THEME TOGGLE
 # --------------------
@@ -121,7 +83,6 @@ if page == "🏠 Home":
 
     with left:
         st.subheader("🗺️ Global Life Expectancy Map")
-
         if selected_country != "All":
             map_df = df[df["country"] == selected_country]
             map_fig = px.scatter_geo(
@@ -224,9 +185,8 @@ elif page == "📈 Analytics":
 elif page == "ℹ️ About":
     st.title("ℹ️ About This Dashboard")
     st.markdown("""
-    This is a **secure, production-ready Streamlit dashboard** with:
+    This is a **production-ready Streamlit dashboard** with:
 
-    ✅ Login authentication via environment variables  
     ✅ Multi-page navigation  
     ✅ Animated world maps  
     ✅ Interactive charts  
@@ -240,3 +200,4 @@ elif page == "ℹ️ About":
 # CLOSE THEME WRAPPER
 # --------------------
 st.markdown("</div>", unsafe_allow_html=True)
+
