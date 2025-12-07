@@ -101,6 +101,7 @@ if page == "🏠 Home":
                 color="lifeExp",
                 hover_name="country",
                 size="pop",
+                animation_frame="year",
                 projection="natural earth",
                 title=f"Life Expectancy — {selected_country}",
                 template="plotly_white",
