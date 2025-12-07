@@ -63,22 +63,22 @@ if page == "🏠 Home":
     left, right = st.columns([1.2, 1])
 
     with left:
-    st.subheader("🗺️ Global Life Expectancy Map (2007)")
-
-    df_2007 = df[df["year"] == 2007]
-
-    map_fig = px.scatter_geo(
-        df_2007,
-        locations="iso_alpha",
-        color="lifeExp",
-        hover_name="country",
-        size="pop",
-        projection="natural earth",
-        title="Life Expectancy by Country (2007)",
-        template="plotly_white",
-    )
-
-    st.plotly_chart(map_fig, use_container_width=True)
+        st.subheader("🗺️ Global Life Expectancy Map (2007)")
+    
+        df_2007 = df[df["year"] == 2007]
+    
+        map_fig = px.scatter_geo(
+            df_2007,
+            locations="iso_alpha",
+            color="lifeExp",
+            hover_name="country",
+            size="pop",
+            projection="natural earth",
+            title="Life Expectancy by Country (2007)",
+            template="plotly_white",
+        )
+    
+        st.plotly_chart(map_fig, use_container_width=True)
 
 
     with right:
