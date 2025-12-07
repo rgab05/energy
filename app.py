@@ -26,9 +26,12 @@ load_css()
 # --------------------
 # DARK / LIGHT MODE TOGGLE
 # --------------------
-theme_mode = st.sidebar.toggle("🌗 Dark Mode", value=True)
-mode_class = "dark-mode" if theme_mode else "light-mode"
-st.markdown(f'<div class="{mode_class}">', unsafe_allow_html=True)
+theme_mode = st.sidebar.radio("🌗 Theme Mode", ["Dark", "Light"])
+is_dark = theme_mode == "Dark"
+
+# Apply body class for CSS
+body_class = "dark-mode" if is_dark else "light-mode"
+st.markdown(f'<div class="{body_class}">', unsafe_allow_html=True)
 
 # --------------------
 # LOAD PUBLIC DATA (GAPMINDER)
@@ -86,50 +89,63 @@ if page == "🏠 Home":
     # --------------------
     left, right = st.columns([1.3, 1])
 
-    # Animated Map
     with left:
-        st.subheader("🗺️ Global Life Expectancy Over Time")
-        if selected_country != "All":
-            map_df = df[df["country"] == selected_country]
-            map_title = f"Life Expectancy Over Time — {selected_country}"
-            anim_frame = None
-        else:
-            map_df = df
-            map_title = "Life Expectancy by Country (1952–2007)"
-            anim_frame = "year"
+        st.subheader("🗺️ Global Life Expectancy Map")
 
-        map_fig = px.scatter_geo(
-            map_df,
-            locations="iso_alpha",
-            color="lifeExp",
-            hover_name="country",
-            size="pop",
-            animation_frame=anim_frame,
-            projection="natural earth",
-            title=map_title,
-            template="plotly_white",
-            size_max=40,
-        )
+        if selected_country != "All":
+            # Static map for selected country
+            map_df = df[df["country"] == selected_country]
+            map_fig = px.scatter_geo(
+                map_df,
+                locations="iso_alpha",
+                color="lifeExp",
+                hover_name="country",
+                size="pop",
+                projection="natural earth",
+                title=f"Life Expectancy — {selected_country}",
+                template="plotly_white",
+                size_max=40
+            )
+        else:
+            # Animated map for all countries
+            map_fig = px.scatter_geo(
+                df,
+                locations="iso_alpha",
+                color="lifeExp",
+                hover_name="country",
+                size="pop",
+                animation_frame="year",
+                projection="natural earth",
+                title="Life Expectancy by Country (1952–2007)",
+                template="plotly_white",
+                size_max=40
+            )
+
         st.plotly_chart(map_fig, use_container_width=True)
 
-    # Bar Chart
     with right:
-        st.subheader("📊 Life Expectancy by Continent (2007)")
+        st.subheader("📊 Life Expectancy by Continent / Country")
+
         df_2007 = df[df["year"] == 2007]
+
         if selected_country != "All":
             df_bar = df_2007[df_2007["country"] == selected_country]
+            x_col = "country"
+            color_col = "country"
         else:
             df_bar = df_2007
+            x_col = "continent"
+            color_col = "continent"
 
-        fig = px.bar(
+        bar_fig = px.bar(
             df_bar,
-            x="continent" if selected_country=="All" else "country",
+            x=x_col,
             y="lifeExp",
-            color="continent" if selected_country=="All" else "country",
-            title="Life Expectancy",
+            color=color_col,
+            title="Life Expectancy (2007)",
             template="plotly_white"
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(bar_fig, use_container_width=True)
 
     st.divider()
 
@@ -137,10 +153,7 @@ if page == "🏠 Home":
     # DATA TABLE
     # --------------------
     st.subheader("📄 Country Data Table (2007)")
-    if selected_country != "All":
-        st.dataframe(df_bar[["country","continent","lifeExp","gdpPercap","pop"]], use_container_width=True)
-    else:
-        st.dataframe(df_2007[["country","continent","lifeExp","gdpPercap","pop"]], use_container_width=True)
+    st.dataframe(df_bar[["country","continent","lifeExp","gdpPercap","pop"]], use_container_width=True)
 
 # ============================================================
 # 📈 ANALYTICS PAGE
@@ -153,7 +166,7 @@ elif page == "📈 Analytics":
         filtered = df[df["country"] == selected_country]
 
         # Life Expectancy over time
-        line_fig = px.line(
+        fig1 = px.line(
             filtered,
             x="year",
             y="lifeExp",
@@ -161,10 +174,10 @@ elif page == "📈 Analytics":
             markers=True,
             template="plotly_white"
         )
-        st.plotly_chart(line_fig, use_container_width=True)
+        st.plotly_chart(fig1, use_container_width=True)
 
         # Population over time
-        pop_fig = px.line(
+        fig2 = px.line(
             filtered,
             x="year",
             y="pop",
@@ -172,10 +185,10 @@ elif page == "📈 Analytics":
             markers=True,
             template="plotly_white"
         )
-        st.plotly_chart(pop_fig, use_container_width=True)
+        st.plotly_chart(fig2, use_container_width=True)
 
         # GDP per Capita over time
-        gdp_fig = px.line(
+        fig3 = px.line(
             filtered,
             x="year",
             y="gdpPercap",
@@ -183,7 +196,7 @@ elif page == "📈 Analytics":
             markers=True,
             template="plotly_white"
         )
-        st.plotly_chart(gdp_fig, use_container_width=True)
+        st.plotly_chart(fig3, use_container_width=True)
 
     else:
         st.info("Select a country from the sidebar to view detailed analytics.")
@@ -213,12 +226,6 @@ elif page == "ℹ️ About":
     - Streamlit
     - Plotly
     - Pandas
-
-    Perfect for:
-    - 📊 Business dashboards  
-    - 🤖 Machine learning demos  
-    - 🌍 Public data apps  
-    - 🚀 Startup MVPs  
     """)
 
     st.success("You're now running a fully production-ready Streamlit UI 🚀")
