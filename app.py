@@ -12,6 +12,16 @@ st.set_page_config(
     layout="wide"
 )
 
+st.markdown("""
+<style>
+[data-testid="stSidebar"] {
+    background-color: #0f172a;
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
 # --------------------
 # LOAD PUBLIC DATA (GAPMINDER)
 # --------------------
