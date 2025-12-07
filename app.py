@@ -22,15 +22,15 @@ df = load_data()
 # --------------------
 # NAVIGATION
 # --------------------
-st.sidebar.title("🚀 Navigation")
-page = st.sidebar.radio("Go to", ["🏠 Home", "📈 Analytics", "ℹ️ About"])
+st.sidebar.title("Navigation")
+page = st.sidebar.radio("Go to", ["Home", "Analytics", "About"])
 
 # --------------------
 # DISPLAY PAGE
 # --------------------
-if page == "🏠 Home":
+if page == "Home":
     home.show(df)
-elif page == "📈 Analytics":
+elif page == "Analytics":
     analytics.show(df)
-elif page == "ℹ️ About":
+elif page == "About":
     about.show()
