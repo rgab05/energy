@@ -1,47 +1,42 @@
+/* Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
-/* GLOBAL FONT */
-html, body, [class*="css"]  {
+/* Global font */
+html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-/* ---------- DARK MODE ---------- */
-.dark-mode .stApp {
-    background-color: #020617;
-    color: #f8fafc;
-}
-
+/* DARK MODE */
+.dark-mode .stApp, 
+.dark-mode .css-1d391kg, 
 .dark-mode [data-testid="stSidebar"] {
-    background-color: #020617;
+    background-color: #0a0f1a !important;
+    color: #f0f0f0 !important;
 }
 
-.dark-mode [data-testid="stSidebar"] * {
-    color: #f8fafc !important;
+.dark-mode .stDataFrame {
+    background-color: #0a0f1a !important;
+    color: #f0f0f0 !important;
 }
 
-/* ---------- LIGHT MODE ---------- */
-.light-mode .stApp {
-    background-color: #f8fafc;
-    color: #020617;
+.dark-mode .stButton>button {
+    background-color: #2563eb !important;
+    color: white !important;
 }
 
+/* LIGHT MODE */
+.light-mode .stApp, 
 .light-mode [data-testid="stSidebar"] {
-    background-color: #e5e7eb;
+    background-color: #f8fafc !important;
+    color: #0a0f1a !important;
 }
 
-.light-mode [data-testid="stSidebar"] * {
-    color: #020617 !important;
+.light-mode .stDataFrame {
+    background-color: white !important;
+    color: #0a0f1a !important;
 }
 
-/* Buttons */
-.stButton > button {
-    background-color: #2563eb;
-    color: white;
-    border-radius: 10px;
-    border: none;
-}
-
-/* Data Tables */
-.stDataFrame {
-    border-radius: 12px;
+.light-mode .stButton>button {
+    background-color: #2563eb !important;
+    color: white !important;
 }
