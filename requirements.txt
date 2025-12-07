@@ -2,3 +2,7 @@ streamlit
 pandas
 plotly
 pydeck
+streamlit-option-menu
+sqlalchemy
+psycopg2-binary
+requests
