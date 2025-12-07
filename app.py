@@ -63,27 +63,23 @@ if page == "🏠 Home":
     left, right = st.columns([1.2, 1])
 
     with left:
-        st.subheader("🗺️ Country Locations (Sample Map)")
+    st.subheader("🗺️ Global Life Expectancy Map (2007)")
 
-        map_data = df[df["year"] == 2007][["country", "lat", "lon"]].dropna()
+    df_2007 = df[df["year"] == 2007]
 
-        layer = pdk.Layer(
-            "ScatterplotLayer",
-            data=map_data,
-            get_position="[lon, lat]",
-            get_radius=200000,
-            get_fill_color=[0, 120, 255, 140],
-            pickable=True,
-        )
+    map_fig = px.scatter_geo(
+        df_2007,
+        locations="iso_alpha",
+        color="lifeExp",
+        hover_name="country",
+        size="pop",
+        projection="natural earth",
+        title="Life Expectancy by Country (2007)",
+        template="plotly_white",
+    )
 
-        view_state = pdk.ViewState(
-            latitude=20,
-            longitude=0,
-            zoom=1.1,
-            pitch=0,
-        )
+    st.plotly_chart(map_fig, use_container_width=True)
 
-        st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state))
 
     with right:
         st.subheader("📊 Life Expectancy by Continent (2007)")
