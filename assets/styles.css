@@ -1,4 +1,3 @@
-/* Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
 /* Global font */
@@ -6,9 +5,8 @@ html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-/* DARK MODE */
+/* Dark mode */
 .dark-mode .stApp, 
-.dark-mode .css-1d391kg, 
 .dark-mode [data-testid="stSidebar"] {
     background-color: #0a0f1a !important;
     color: #f0f0f0 !important;
@@ -24,7 +22,7 @@ html, body, [class*="css"] {
     color: white !important;
 }
 
-/* LIGHT MODE */
+/* Light mode */
 .light-mode .stApp, 
 .light-mode [data-testid="stSidebar"] {
     background-color: #f8fafc !important;
