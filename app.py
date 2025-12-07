@@ -35,7 +35,7 @@ df = load_data()
 # --------------------
 # SIDEBAR NAVIGATION (NAV BAR)
 # --------------------
-st.sidebar.title("🚀 Navigation")
+st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
     ["🏠 Home", "📈 Analytics", "ℹ️ About"]
@@ -63,23 +63,23 @@ if page == "🏠 Home":
     left, right = st.columns([1.2, 1])
 
     with left:
-        st.subheader("🗺️ Global Life Expectancy Map (2007)")
-    
-        df_2007 = df[df["year"] == 2007]
+        st.subheader("🗺️ Global Life Expectancy Over Time")
     
         map_fig = px.scatter_geo(
-            df_2007,
+            df,
             locations="iso_alpha",
             color="lifeExp",
             hover_name="country",
             size="pop",
+            animation_frame="year",   # ✅ THIS ENABLES ANIMATION
             projection="natural earth",
-            title="Life Expectancy by Country (2007)",
+            title="Life Expectancy by Country (1952–2007)",
             template="plotly_white",
+            size_max=40
         )
     
         st.plotly_chart(map_fig, use_container_width=True)
-
+    
 
     with right:
         st.subheader("📊 Life Expectancy by Continent (2007)")
