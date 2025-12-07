@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import os
 from hashlib import sha256
 
 # --------------------
@@ -25,19 +26,23 @@ def load_css(file_path="assets/styles.css"):
 load_css()
 
 # --------------------
-# USER AUTHENTICATION
+# USER CREDENTIALS (ENVIRONMENT VARIABLES)
 # --------------------
-# For simplicity, store hashed passwords
+# Set these environment variables in your deployment platform or locally
+# Example: export ADMIN_PASSWORD_HASH=$(echo -n "password123" | sha256sum | awk '{print $1}')
 USER_CREDENTIALS = {
-    "admin": Richard("abcd".encode()).hexdigest(),
-    "user": sha256("mypassword".encode()).hexdigest()
+    "admin": os.getenv("ADMIN_PASSWORD_HASH"),
+    "user": os.getenv("USER_PASSWORD_HASH")
 }
 
+# --------------------
+# LOGIN LOGIC
+# --------------------
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 def login(username, password):
-    if username in USER_CREDENTIALS:
+    if username in USER_CREDENTIALS and USER_CREDENTIALS[username]:
         if sha256(password.encode()).hexdigest() == USER_CREDENTIALS[username]:
             st.session_state.authenticated = True
             st.success(f"Logged in as {username}")
@@ -54,8 +59,8 @@ if not st.session_state.authenticated:
     password = st.text_input("Password", type="password")
     if st.button("Login"):
         login(username, password)
-    st.stop()  # Stop running the rest of the app until logged in
-
+    st.stop()  # Stop the rest of the app until login
+     
 # --------------------
 # THEME TOGGLE
 # --------------------
@@ -93,6 +98,7 @@ if page in ["🏠 Home", "📈 Analytics"]:
 # 🏠 HOME PAGE
 # ============================================================
 if page == "🏠 Home":
+
     st.title("🌍 Global Data Dashboard")
     st.markdown("Modern Streamlit template with **dark/light mode**, **maps**, and **analytics**.")
 
@@ -115,6 +121,7 @@ if page == "🏠 Home":
 
     with left:
         st.subheader("🗺️ Global Life Expectancy Map")
+
         if selected_country != "All":
             map_df = df[df["country"] == selected_country]
             map_fig = px.scatter_geo(
@@ -219,7 +226,7 @@ elif page == "ℹ️ About":
     st.markdown("""
     This is a **secure, production-ready Streamlit dashboard** with:
 
-    ✅ Login authentication  
+    ✅ Login authentication via environment variables  
     ✅ Multi-page navigation  
     ✅ Animated world maps  
     ✅ Interactive charts  
