@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+/* GLOBAL FONT */
+html, body, [class*="css"]  {
+    font-family: 'Inter', sans-serif;
+}
+
+/* ---------- DARK MODE ---------- */
+.dark-mode .stApp {
+    background-color: #020617;
+    color: #f8fafc;
+}
+
+.dark-mode [data-testid="stSidebar"] {
+    background-color: #020617;
+}
+
+.dark-mode [data-testid="stSidebar"] * {
+    color: #f8fafc !important;
+}
+
+/* ---------- LIGHT MODE ---------- */
+.light-mode .stApp {
+    background-color: #f8fafc;
+    color: #020617;
+}
+
+.light-mode [data-testid="stSidebar"] {
+    background-color: #e5e7eb;
+}
+
+.light-mode [data-testid="stSidebar"] * {
+    color: #020617 !important;
+}
+
+/* Buttons */
+.stButton > button {
+    background-color: #2563eb;
+    color: white;
+    border-radius: 10px;
+    border: none;
+}
+
+/* Data Tables */
+.stDataFrame {
+    border-radius: 12px;
+}
