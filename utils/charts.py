@@ -5,7 +5,7 @@ def create_map(df, country):
         map_df = df[df["country"] == country]
         fig = px.scatter_geo(
             map_df, locations="iso_alpha", color="lifeExp", hover_name="country",
-            size="pop", projection="natural earth", title=f"Life Expectancy — {country}",
+            size="pop", animation_frame="year", projection="natural earth", title=f"Life Expectancy — {country}",
             size_max=40
         )
     else:
