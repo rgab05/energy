@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from hashlib import sha256
 
 # --------------------
 # PAGE CONFIG
@@ -12,7 +13,7 @@ st.set_page_config(
 )
 
 # --------------------
-# LOAD EXTERNAL CSS
+# LOAD CSS
 # --------------------
 def load_css(file_path="assets/styles.css"):
     try:
@@ -24,12 +25,42 @@ def load_css(file_path="assets/styles.css"):
 load_css()
 
 # --------------------
+# USER AUTHENTICATION
+# --------------------
+# For simplicity, store hashed passwords
+USER_CREDENTIALS = {
+    "admin": sha256("password123".encode()).hexdigest(),
+    "user": sha256("mypassword".encode()).hexdigest()
+}
+
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+def login(username, password):
+    if username in USER_CREDENTIALS:
+        if sha256(password.encode()).hexdigest() == USER_CREDENTIALS[username]:
+            st.session_state.authenticated = True
+            st.success(f"Logged in as {username}")
+            return True
+    st.error("Invalid username or password")
+    return False
+
+# --------------------
+# LOGIN PAGE
+# --------------------
+if not st.session_state.authenticated:
+    st.title("🔒 Login")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        login(username, password)
+    st.stop()  # Stop running the rest of the app until logged in
+
+# --------------------
 # THEME TOGGLE
 # --------------------
 theme_mode = st.sidebar.radio("🌗 Theme Mode", ["Dark", "Light"])
 body_class = "dark-mode" if theme_mode == "Dark" else "light-mode"
-
-# Wrap all content in a div for dynamic theme
 st.markdown(f'<div class="{body_class}">', unsafe_allow_html=True)
 
 # --------------------
@@ -62,13 +93,10 @@ if page in ["🏠 Home", "📈 Analytics"]:
 # 🏠 HOME PAGE
 # ============================================================
 if page == "🏠 Home":
-
     st.title("🌍 Global Data Dashboard")
     st.markdown("Modern Streamlit template with **dark/light mode**, **maps**, and **analytics**.")
 
-    # --------------------
     # KPIs
-    # --------------------
     col1, col2, col3 = st.columns(3)
     if selected_country != "All":
         df_country = df[df["country"] == selected_country]
@@ -82,16 +110,12 @@ if page == "🏠 Home":
 
     st.divider()
 
-    # --------------------
     # MAP + BAR CHART
-    # --------------------
     left, right = st.columns([1.3, 1])
 
     with left:
         st.subheader("🗺️ Global Life Expectancy Map")
-
         if selected_country != "All":
-            # Static map for selected country
             map_df = df[df["country"] == selected_country]
             map_fig = px.scatter_geo(
                 map_df,
@@ -105,7 +129,6 @@ if page == "🏠 Home":
                 size_max=40
             )
         else:
-            # Animated map for all countries
             map_fig = px.scatter_geo(
                 df,
                 locations="iso_alpha",
@@ -122,9 +145,7 @@ if page == "🏠 Home":
 
     with right:
         st.subheader("📊 Life Expectancy by Continent / Country")
-
         df_2007 = df[df["year"] == 2007]
-
         if selected_country != "All":
             df_bar = df_2007[df_2007["country"] == selected_country]
             x_col = "country"
@@ -146,9 +167,7 @@ if page == "🏠 Home":
 
     st.divider()
 
-    # --------------------
     # DATA TABLE
-    # --------------------
     st.subheader("📄 Country Data Table (2007)")
     st.dataframe(df_bar[["country","continent","lifeExp","gdpPercap","pop"]], use_container_width=True)
 
@@ -156,13 +175,10 @@ if page == "🏠 Home":
 # 📈 ANALYTICS PAGE
 # ============================================================
 elif page == "📈 Analytics":
-
     st.title("📈 Advanced Analytics")
-
     if selected_country != "All":
         filtered = df[df["country"] == selected_country]
 
-        # Life Expectancy over time
         fig1 = px.line(
             filtered,
             x="year",
@@ -173,7 +189,6 @@ elif page == "📈 Analytics":
         )
         st.plotly_chart(fig1, use_container_width=True)
 
-        # Population over time
         fig2 = px.line(
             filtered,
             x="year",
@@ -184,7 +199,6 @@ elif page == "📈 Analytics":
         )
         st.plotly_chart(fig2, use_container_width=True)
 
-        # GDP per Capita over time
         fig3 = px.line(
             filtered,
             x="year",
@@ -194,7 +208,6 @@ elif page == "📈 Analytics":
             template="plotly_white"
         )
         st.plotly_chart(fig3, use_container_width=True)
-
     else:
         st.info("Select a country from the sidebar to view detailed analytics.")
 
@@ -202,24 +215,19 @@ elif page == "📈 Analytics":
 # ℹ️ ABOUT PAGE
 # ============================================================
 elif page == "ℹ️ About":
-
     st.title("ℹ️ About This Dashboard")
-
     st.markdown("""
-    This is a **clean, modern Streamlit dashboard template** with:
+    This is a **secure, production-ready Streamlit dashboard** with:
 
+    ✅ Login authentication  
     ✅ Multi-page navigation  
     ✅ Animated world maps  
     ✅ Interactive charts  
-    ✅ Data tables  
     ✅ Country drill-down analytics  
     ✅ Dark / Light mode toggle  
     ✅ External CSS styling  
     ✅ Google Fonts  
-    ✅ Streamlit Cloud ready  
     """)
-
-    st.success("You're now running a fully production-ready Streamlit UI 🚀")
 
 # --------------------
 # CLOSE THEME WRAPPER
